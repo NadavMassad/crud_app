@@ -9,43 +9,48 @@
 </head>
 
 <body>
-    Name<input id="sname">
-    Age<input id="sage">
-    <button onclick="addData()">Add Data</button>
+     <!-- GUI -->
+    name<input id="uname">
+    city<input id="ucity">
+    <button onclick="addData()">Add data</button>
     <div id="display"></div>
     <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
     <script>
-        const MY_SERVER = 'http://localhost:3000/students/'
+        const MY_SERVER ="http://127.0.0.1:5000/students/" //flask
+        // const MY_SERVER ="https://jsonplaceholder.typicode.com/users/" //json place holder
+        // const MY_SERVER = "http://localhost:3000/students/" // fake json server
+        // const MY_SERVER ="http://localhost:5000/students" //my flask python
 
-        // GET - (READ)
         const loadData = async () => {
-            const res = await axios.get(MY_SERVER) // Get the data from server
-            display.innerHTML = res.data.map(student => `
+            // get (READ)
+            const res = await axios.get(MY_SERVER) //get data from server
+            display.innerHTML = res.data.map(stu => `
             <h1>
-                <button onclick='delStudent(${student.id})'>Delete</button>
-                <button onclick='updStudent(${student.id})'>Update</button>
-                Name: ${student.name}, Age: ${student.age}</h1><hr>`).join("") // build the dispay
-            console.log(res.data) // display in console
+            <button onclick='updStudent(${stu.id})'>update</button>
+            <button onclick='delStudent(${stu.id})'>Delete</button>
+            name: ${stu.name} , city: ${stu.city} ,id:${stu.id}</h1><hr>`).join("") //build display
+            console.log(res.data) //display date  in console
         }
+
         loadData()
 
-
-        // POST - Create
+        // post (Create)
         const addData = () => {
-            axios.post(MY_SERVER, { name: sname.value, age: sage.value }).then((response) => console.log(response.data))
+            axios.post(MY_SERVER, {name: uname.value, city: ucity.value }).then((res) => console.log(res.data))
         }
 
-        // DELETE - DELETE
+        //delete (delete)
         const delStudent = (id) => {
-            axios.delete(MY_SERVER + id).then((response) => console.log(response.data))
+            console.log(id)
+            axios.delete(MY_SERVER + id).then((res) => console.log(res.data))
         }
-        // PUT - UPDATE
+
         const updStudent =async (id) => {
-        await axios.put(MY_SERVER + id, { name: sname.value, age: sage.value })
+            // put (update)
+            const res=await axios.put(MY_SERVER + id,{name: uname.value, city: ucity.value })
+            console.log(res)
+            loadData()
         }
     </script>
-
-
 </body>
-
 </html>
