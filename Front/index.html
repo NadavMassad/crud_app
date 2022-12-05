@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    Name<input id="sname">
+    Age<input id="sage">
+    <button onclick="addData()">Add Data</button>
+    <div id="display"></div>
+    <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
+    <script>
+        const MY_SERVER = 'http://localhost:3000/students/'
+
+        // GET - (READ)
+        const loadData = async () => {
+            const res = await axios.get(MY_SERVER) // Get the data from server
+            display.innerHTML = res.data.map(student => `
+            <h1>
+                <button onclick='delStudent(${student.id})'>Delete</button>
+                <button onclick='updStudent(${student.id})'>Update</button>
+                Name: ${student.name}, Age: ${student.age}</h1><hr>`).join("") // build the dispay
+            console.log(res.data) // display in console
+        }
+        loadData()
+
+
+        // POST - Create
+        const addData = () => {
+            axios.post(MY_SERVER, { name: sname.value, age: sage.value }).then((response) => console.log(response.data))
+        }
+
+        // DELETE - DELETE
+        const delStudent = (id) => {
+            axios.delete(MY_SERVER + id).then((response) => console.log(response.data))
+        }
+        // PUT - UPDATE
+        const updStudent =async (id) => {
+        await axios.put(MY_SERVER + id, { name: sname.value, age: sage.value })
+        }
+    </script>
+
+
+</body>
+
+</html>
